@@ -121,12 +121,7 @@ public class TestDriver {
 		System.out.println("done");
 
 		if (sparqlEndpoint != null && !multithreading) {
-			if (doSQL)
-				server = new SQLConnection(sparqlEndpoint, timeout,
-						driverClassName);
-			else
-				server = new SPARQLConnection(sparqlEndpoint,
-						sparqlUpdateEndpoint, defaultGraph, timeout);
+			server = new InterceptingConnection();
 		} else if (multithreading) {
 			// do nothing
 		} else {
@@ -487,7 +482,6 @@ public class TestDriver {
 			queryMix.setRun(nrRun);
 			while (queryMix.hasNext()) {
 				Query next = queryMix.getNext();
-
 				// Don't run update queries on warm-up
 				if (nrRun < 0 && next.getQueryType() == Query.UPDATE_TYPE) {
 					queryMix.setCurrent(0, -1.0);
